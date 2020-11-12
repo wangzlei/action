@@ -36,6 +36,9 @@ jobs:
         run: |
           pwd
           ls -l
+          cd sample-apps/Python-lambda-sam
+          pwd
+          ls -l
           sudo snap install docker
           export CI=1
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
