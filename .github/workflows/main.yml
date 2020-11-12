@@ -39,7 +39,6 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           sudo snap install docker
-          export CI=1
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
           export PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
           brew tap aws/tap
