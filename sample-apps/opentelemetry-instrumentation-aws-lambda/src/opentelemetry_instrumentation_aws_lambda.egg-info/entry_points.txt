@@ -1,0 +1,3 @@
+[opentelemetry_instrumentor]
+aiohttp-client = opentelemetry.instrumentation.aws_lambda:AwsLambdaInstrumentor
+

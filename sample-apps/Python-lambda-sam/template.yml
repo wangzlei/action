@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Lambda application that calls the Lambda API.
+Resources:
+  function:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: aws_observability.lambda_handler
+      Runtime: python3.8
+      CodeUri: ./function
+      Description: Build AWS Observability layer
+      MemorySize: 512
+      Timeout: 15
+      Environment:
+        Variables:
+          ORIG_HANDLER: lambda_function.lambda_handler
+          INPROCESS_EXPORTER: false
+      Policies:
+        - AdministratorAccess
+      Tracing: Active
+      Layers:
+        - !Ref AwsObservabilitySdk
+        - !Ref AwsObservabilityCollector
+  AwsObservabilitySdk:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: aws-observability-sdk-python38-beta
+      Description: Lambda AWS Observability Python3.8 layer.
+      ContentUri: ./aws_observability_sdk
+      CompatibleRuntimes:
+        - python3.8
+    Metadata:
+      BuildMethod: makefile
+  AwsObservabilityCollector:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: aws-observability-collector-beta
+      Description: Lambda AWS Observability Collector layer.
+      ContentUri: ./aws_observability_collector
+      CompatibleRuntimes:
+        - python3.8
+    Metadata:
+      BuildMethod: makefile

@@ -1,0 +1,7 @@
+jsonpickle==1.3
+aws-xray-sdk==2.4.3
+aiohttp
+opentelemetry-instrumentation
+opentelemetry-instrumentation-botocore
+opentelemetry-instrumentation-aiohttp-client
+opentelemetry-exporter-otlp
