@@ -55,10 +55,12 @@ jobs:
           ./run.sh -b
       
       - name: sam deploy us-west-2
+        if: ${{ success() }}
         run: |
           cd sample-apps/Python-lambda-sam
           ./run.sh -d -r us-west-2
       - name: sam deploy us-east-1
+        if: ${{ success() }}
         run: |
           cd sample-apps/Python-lambda-sam
           ./run.sh -d -r us-east-1
