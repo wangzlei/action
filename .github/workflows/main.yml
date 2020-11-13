@@ -19,7 +19,7 @@ jobs:
     
     strategy:
       matrix:
-        region: [us-west-2, us-west-1]
+        region: [us-west-2]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
