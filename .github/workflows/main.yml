@@ -43,8 +43,6 @@ jobs:
           AWS_REGION: ${{matrix.region}}
         run: |
           echo $AWS_REGION
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-          export PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
           brew tap aws/tap
           brew install aws-sam-cli
           cd sample-apps/Python-lambda-sam
