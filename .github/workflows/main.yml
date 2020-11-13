@@ -40,9 +40,9 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_REGION: ${{matrix.region}}
         run: |
-          echo ${{matrix.region}}
+          echo $AWS_REGION
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
           export PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
           brew tap aws/tap
