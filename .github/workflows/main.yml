@@ -47,4 +47,6 @@ jobs:
           brew install aws-sam-cli
           cd sample-apps/Python-lambda-sam
           chmod +x run.sh
-          ./run.sh
+          ./run.sh -b
+          ./run.sh -d -r us-west-2
+          ./run.sh -d -r us-east-1
