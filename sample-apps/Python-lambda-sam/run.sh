@@ -20,22 +20,27 @@ main () {
     build=false
     deploy=false
 
-    while getopts "hrtbd" opt; do
+    while getopts "hbdr:t:s:" opt; do
         case "${opt}" in
             h) echo_usage
-            exit 0
-            ;;
-            r) region="${OPTARG}" ;;
-            t) template="${OPTARG}" ;;
-            s) stack="${OPTARG}" ;;
-            b) build=true ;;
-            d) deploy=true ;;
+                exit 0
+                ;;
+            b) build=true 
+                ;;
+            d) deploy=true 
+                ;;
+            r) region="${OPTARG}"
+                ;;
+            t) template="${OPTARG}" 
+                ;;
+            s) stack="${OPTARG}"
+                ;;
             \?) echo "Invalid option: -${OPTARG}" >&2
-            exit 1
-            ;;
+                exit 1
+                ;;
             :)  echo "Option -${OPTARG} requires an argument" >&2
-            exit 1
-            ;;
+                exit 1
+                ;;
         esac
     done
 
