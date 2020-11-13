@@ -16,6 +16,11 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{matrix.region}}
     
     strategy:
       matrix:
@@ -36,7 +41,7 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
 
-      - name: setup
+      - name: sam build
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -48,5 +53,12 @@ jobs:
           cd sample-apps/Python-lambda-sam
           chmod +x run.sh
           ./run.sh -b
+      
+      - name: sam deploy us-west-2
+        run: |
+          cd sample-apps/Python-lambda-sam
           ./run.sh -d -r us-west-2
+      - name: sam deploy us-east-1
+        run: |
+          cd sample-apps/Python-lambda-sam
           ./run.sh -d -r us-east-1
