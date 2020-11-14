@@ -27,6 +27,7 @@ from opentelemetry.trace.propagation.textmap import (
 
 _logger = logging.getLogger(__name__)
 
+
 class AWSXRayFormat(TextMapPropagator):
     """Propagator for the AWS X-Ray Trace Header propagation protocol.
 
@@ -109,10 +110,8 @@ class AWSXRayFormat(TextMapPropagator):
                 if (
                     len(value) != self.TRACE_ID_LENGTH
                     or not value.startswith(self.TRACE_ID_VERSION)
-                    or value[self.TRACE_ID_DELIMITER_INDEX_1]
-                    != self.TRACE_ID_DELIMITER
-                    or value[self.TRACE_ID_DELIMITER_INDEX_2]
-                    != self.TRACE_ID_DELIMITER
+                    or value[self.TRACE_ID_DELIMITER_INDEX_1] != self.TRACE_ID_DELIMITER
+                    or value[self.TRACE_ID_DELIMITER_INDEX_2] != self.TRACE_ID_DELIMITER
                 ):
                     _logger.error(
                         (
@@ -194,9 +193,7 @@ class AWSXRayFormat(TextMapPropagator):
         context: typing.Optional[Context] = None,
     ) -> None:
         if not carrier:
-            raise ValueError(
-                "Could not extract from carrier: %s".format(carrier)
-            )
+            raise ValueError("Could not extract from carrier: %s".format(carrier))
 
         span = trace.get_current_span(context=context)
 
@@ -238,5 +235,7 @@ class AWSXRayFormat(TextMapPropagator):
         )
 
         set_in_carrier(
-            carrier, self.TRACE_HEADER_KEY, trace_header,
+            carrier,
+            self.TRACE_HEADER_KEY,
+            trace_header,
         )

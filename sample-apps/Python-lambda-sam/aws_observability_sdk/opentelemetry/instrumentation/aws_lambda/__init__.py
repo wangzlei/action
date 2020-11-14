@@ -64,13 +64,13 @@ logger = logging.getLogger(__name__)
 
 class AwsLambdaInstrumentor(BaseInstrumentor):
     def _instrument(self, **kwargs):
-        self._tracer = get_tracer(
-            __name__, __version__, kwargs.get("tracer_provider")
-        )
+        self._tracer = get_tracer(__name__, __version__, kwargs.get("tracer_provider"))
 
         self._tracer_provider = get_tracer_provider()
 
-        lambda_handler = os.environ.get("_HANDLER")
+        lambda_handler = os.environ.get(
+            "ORIG_HANDLER", os.environ.get("_HANDLER")
+        )
         wrapped_names = lambda_handler.rsplit(".", 1)
         self._wrapped_module_name = wrapped_names[0]
         self._wrapped_function_name = wrapped_names[1]
@@ -91,9 +91,7 @@ class AwsLambdaInstrumentor(BaseInstrumentor):
         lambda_context = args[1]
         ctx_invoked_function_arn = lambda_context.invoked_function_arn
         ctx_aws_request_id = lambda_context.aws_request_id
-        orig_handler = os.environ.get(
-            "ORIG_HANDLER", os.environ.get("_HANDLER")
-        )
+        orig_handler = os.environ.get("ORIG_HANDLER", os.environ.get("_HANDLER"))
         xray_trace_id = os.environ.get("_X_AMZN_TRACE_ID", "")
 
         propagator = AWSXRayFormat()

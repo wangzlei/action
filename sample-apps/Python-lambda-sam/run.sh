@@ -19,19 +19,22 @@ main () {
     template='template.yml'
     build=false
     deploy=false
+    debug=false
 
-    while getopts "hbdr:t:s:" opt; do
+    while getopts "hbdxr:t:s:" opt; do
         case "${opt}" in
             h) echo_usage
                 exit 0
                 ;;
-            b) build=true 
+            b) build=true
                 ;;
-            d) deploy=true 
+            x) debug=true
+                ;;
+            d) deploy=true
                 ;;
             r) region="${OPTARG}"
                 ;;
-            t) template="${OPTARG}" 
+            t) template="${OPTARG}"
                 ;;
             s) stack="${OPTARG}"
                 ;;
@@ -57,10 +60,20 @@ main () {
         rm -rf aws_observability_collector
         mkdir aws_observability_collector && cp -r ../../extensions/aoc-extension/* aws_observability_collector
         # remove local cp if aoc lambda is ready
-        # cp /Users/wangzl/workspace/aws-ob/aws-otel-collector/build/linux/aoc_linux_x86_64 aws_observability_collector
+        #cp /Users/wangzl/workspace/aws-ob/aws-otel-collector/build/linux/aoc_linux_x86_64 aws_observability_collector
         wget -O aws_observability_collector/aoc_linux_x86_64 https://github.com/open-telemetry/opentelemetry-collector-contrib/releases/download/v0.14.0/otelcontribcol_linux_amd64
         sam build -u -t $template
         # find .aws-sam -name __pycache__ -exec rm -rf  {} \;
+    fi
+
+    if [[ $debug == true ]]; then
+        echo "debug mode, show code in lambda console"
+        mkdir -p .aws-sam/build/function/opentelemetry/instrumentation/auto_instrumentation/
+        mv .aws-sam/build/AwsObservabilitySdk/python/opentelemetry/instrumentation/auto_instrumentation/__init__.py .aws-sam/build/function/opentelemetry/instrumentation/auto_instrumentation/
+        mv .aws-sam/build/AwsObservabilitySdk/python/opentelemetry/instrumentation/auto_instrumentation/sitecustomize.py .aws-sam/build/function/opentelemetry/instrumentation/auto_instrumentation/
+        cp .aws-sam/build/AwsObservabilitySdk/python/bin/opentelemetry-instrument .aws-sam/build/function
+        mv .aws-sam/build/AwsObservabilitySdk/python/aws_observability.py .aws-sam/build/function/
+        mv .aws-sam/build/AwsObservabilitySdk/python/opentelemetry/instrumentation/aws_lambda .aws-sam/build/function/opentelemetry/instrumentation/
     fi
 
     if [[ $deploy == true ]]; then
