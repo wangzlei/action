@@ -1,13 +1,15 @@
 #!/var/lang/bin/python3.8
 # -*- coding: utf-8 -*-
-import re
-import sys
-import os
-from opentelemetry.instrumentation.auto_instrumentation import run
-os.environ['ORIG_HANDLER']=os.environ.get('_HANDLER')
-os.environ['_HANDLER']='aws_observability.lambda_handler'
-os.environ['OTEL_PYTHON_TRACER_PROVIDER']='sdk_tracer_provider'
-os.environ['PYTHONPATH']='/opt/python:/var/runtime'
+
+from os import environ, execl
+from shutil import which
+from sys import argv, exit
+
+environ['ORIG_HANDLER']=environ.get('_HANDLER')
+environ['_HANDLER']='aws_observability.lambda_handler'
+environ['OTEL_PYTHON_TRACER_PROVIDER']='sdk_tracer_provider'
+environ['PYTHONPATH']='/opt/python:/var/runtime'
+
 if __name__ == '__main__':
-    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
-    sys.exit(run())
+    executable = which(argv[1])
+    exit(execl(executable, executable, *argv[2:]))
