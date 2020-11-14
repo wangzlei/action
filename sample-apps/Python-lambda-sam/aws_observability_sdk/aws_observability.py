@@ -69,7 +69,8 @@ for entry_point in iter_entry_points("opentelemetry_instrumentor"):
         logger.info("Instrumented %s", entry_point.name)
 
     except Exception:
-        logger.exception("Instrumenting of %s failed", entry_point.name)
+        # logger.exception("Instrumenting of %s failed", entry_point.name)
+        logger.info("Instrumenting of %s failed", entry_point.name)
 
 
 def modify_module_name(module_name):

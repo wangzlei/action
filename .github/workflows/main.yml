@@ -24,7 +24,7 @@ jobs:
     
     strategy:
       matrix:
-        region: [us-west-2]
+        region: [us-west-1]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -54,13 +54,8 @@ jobs:
           chmod +x run.sh
           ./run.sh -b
       
-      - name: sam deploy us-west-2
+      - name: sam deploy us-west-1
         if: ${{ success() }}
         run: |
           cd sample-apps/Python-lambda-sam
-          ./run.sh -d -r us-west-2
-      - name: sam deploy us-east-1
-        if: ${{ success() }}
-        run: |
-          cd sample-apps/Python-lambda-sam
-          ./run.sh -d -r us-east-1
+          ./run.sh -d -r us-west-1
