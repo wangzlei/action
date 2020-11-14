@@ -13,10 +13,7 @@ Resources:
       Timeout: 15
       Environment:
         Variables:
-          ORIG_HANDLER: lambda_function.lambda_handler
           AWS_LAMBDA_EXEC_WRAPPER: /opt/python/aot-instrument
-          OTEL_PYTHON_TRACER_PROVIDER: sdk_tracer_provider
-          PYTHONPATH: /opt/python:/var/runtime
           INPROCESS_EXPORTER: false
       Policies:
         - AdministratorAccess

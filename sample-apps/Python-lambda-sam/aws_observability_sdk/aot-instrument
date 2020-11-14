@@ -4,7 +4,10 @@ import re
 import sys
 import os
 from opentelemetry.instrumentation.auto_instrumentation import run
+os.environ['ORIG_HANDLER']=os.environ.get('_HANDLER')
 os.environ['_HANDLER']='aws_observability.lambda_handler'
+os.environ['OTEL_PYTHON_TRACER_PROVIDER']='sdk_tracer_provider'
+os.environ['PYTHONPATH']='/opt/python:/var/runtime'
 if __name__ == '__main__':
     sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
     sys.exit(run())
