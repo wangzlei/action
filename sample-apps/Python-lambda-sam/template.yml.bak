@@ -14,15 +14,16 @@ Resources:
       Environment:
         Variables:
           ORIG_HANDLER: lambda_function.lambda_handler
-          AWS_LAMBDA_EXEC_WRAPPER: /opt/python/aot-instrument
-          OTEL_PYTHON_TRACER_PROVIDER: sdk_tracer_provider
-          PYTHONPATH: /opt/python:/var/runtime:/var/task
           INPROCESS_EXPORTER: false
+          AWS_LAMBDA_EXEC_WRAPPER: /opt/python/bin/opentelemetry-instrument
+          PYTHONPATH: /opt/python:/var/runtime:/var/task
+          OTEL_PYTHON_TRACER_PROVIDER: sdk_tracer_provider
       Policies:
         - AdministratorAccess
       Tracing: Active
       Layers:
         - !Ref AwsObservabilitySdk
+        # - arn:aws:lambda:us-west-2:886273918189:layer:aws-observability-collector-beta:21
         - !Ref AwsObservabilityCollector
   AwsObservabilitySdk:
     Type: AWS::Serverless::LayerVersion
@@ -44,3 +45,16 @@ Resources:
         - python3.8
     Metadata:
       BuildMethod: makefile
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: my-sar-test
+    Description: >
+      hehe haha,
+    Author: Lei Wang
+    SpdxLicenseId: Apache-2.0
+    LicenseUrl: LICENSE
+    ReadmeUrl: LICENSE
+    Labels: ['layer', 'test', 'lambda', 'aot']
+    HomePageUrl: https://github.com/wangzlei/awslambda-otel-sample/tree/master/sample-apps/Python-lambda-sam
+    SemanticVersion: 0.1.0
+    SourceCodeUrl: https://github.com/wangzlei/awslambda-otel-sample/tree/master/sample-apps/Python-lambda-sam
