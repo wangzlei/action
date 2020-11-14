@@ -60,8 +60,13 @@ main () {
         rm -rf aws_observability_collector
         mkdir aws_observability_collector && cp -r ../../extensions/aoc-extension/* aws_observability_collector
         # remove local cp if aoc lambda is ready
-        #cp /Users/wangzl/workspace/aws-ob/aws-otel-collector/build/linux/aoc_linux_x86_64 aws_observability_collector
-        wget -O aws_observability_collector/aoc_linux_x86_64 https://github.com/open-telemetry/opentelemetry-collector-contrib/releases/download/v0.14.0/otelcontribcol_linux_amd64
+        if [[ -z "${CI-}" ]]; then
+            echo "Copy collector in local"
+            cp /Users/wangzl/workspace/aws-ob/aws-otel-collector/build/linux/aoc_linux_x86_64 aws_observability_collector
+        else
+            echo "CI download collector from github"
+            wget -O aws_observability_collector/aoc_linux_x86_64 https://github.com/open-telemetry/opentelemetry-collector-contrib/releases/download/v0.14.0/otelcontribcol_linux_amd64
+        fi
         sam build -u -t $template
         # find .aws-sam -name __pycache__ -exec rm -rf  {} \;
     fi
