@@ -11,19 +11,14 @@ Resources:
       Description: Build AWS Observability layer
       MemorySize: 512
       Timeout: 15
-      Environment:
-        Variables:
-          ORIG_HANDLER: lambda_function.lambda_handler
-          INPROCESS_EXPORTER: false
-          AWS_LAMBDA_EXEC_WRAPPER: /opt/python/bin/opentelemetry-instrument
-          PYTHONPATH: /opt/python:/var/runtime:/var/task
-          OTEL_PYTHON_TRACER_PROVIDER: sdk_tracer_provider
       Policies:
         - AdministratorAccess
+      Environment:
+        Variables:
+          AWS_LAMBDA_EXEC_WRAPPER: /opt/python/aot-instrument
       Tracing: Active
       Layers:
         - !Ref AwsObservabilitySdk
-        # - arn:aws:lambda:us-west-2:886273918189:layer:aws-observability-collector-beta:21
         - !Ref AwsObservabilityCollector
   AwsObservabilitySdk:
     Type: AWS::Serverless::LayerVersion

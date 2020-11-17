@@ -11,12 +11,11 @@ Resources:
       Description: Build AWS Observability layer
       MemorySize: 512
       Timeout: 15
+      Policies:
+        - AdministratorAccess
       Environment:
         Variables:
           AWS_LAMBDA_EXEC_WRAPPER: /opt/python/aot-instrument
-          INPROCESS_EXPORTER: false
-      Policies:
-        - AdministratorAccess
       Tracing: Active
       Layers:
         - !Ref AwsObservabilitySdk
