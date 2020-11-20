@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Lambda application that calls the Lambda API.
+Resources:
+  function:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: aws_observability.lambda_handler
+      Runtime: python3.7
+      CodeUri: ./function
+      Description: Build AWS Observability layer
+      MemorySize: 512
+      Timeout: 15
+      Environment:
+        Variables:
+          ORIG_HANDLER: lambda_function.lambda_handler
+          INPROCESS_EXPORTER: false
+      Policies:
+        - AdministratorAccess
+      Tracing: Active
+      Layers:
+        - !Ref AwsObservability
+        - arn:aws:lambda:us-west-2:886273918189:layer:my-aoc-layer:2
+  AwsObservability:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: aws-observability-python37-beta
+      Description: Lambda AWS Observability Python3.7 layer.
+      ContentUri: ./aws_observability
+      CompatibleRuntimes:
+        - python3.7
+    Metadata:
+      BuildMethod: makefile
