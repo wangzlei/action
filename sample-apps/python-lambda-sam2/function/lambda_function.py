@@ -1,4 +1,5 @@
 import os
+import json
 import aiohttp
 import asyncio
 import boto3
@@ -24,4 +25,7 @@ def lambda_handler(event, context):
     for bucket in s3.buckets.all():
         print(bucket.name)
 
-    return "200 OK"
+    return {
+        'statusCode': 200,
+        'body': json.dumps(os.environ.get("_X_AMZN_TRACE_ID"))
+    }
