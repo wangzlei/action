@@ -65,13 +65,18 @@ jobs:
       - name: sam build
         run: |
           echo $AWS_REGION
-          aws s3 ls
           cd sample-apps/python-lambda-sam2
           chmod +x run.sh
           ./run.sh -b
       
-      - name: sam deploy us-west-1
+      - name: sam deploy
         if: ${{ success() }}
         run: |
           cd sample-apps/python-lambda-sam2
           ./run.sh -d -r $AWS_REGION
+          
+      - name: invoke Lambda
+        if: ${{ success() }}
+        run: |
+          cd sample-apps/python-lambda-sam2
+          ./run.sh -i -r $AWS_REGION
