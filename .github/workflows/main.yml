@@ -59,7 +59,7 @@ jobs:
           
       - name: init
         run: |
-          echo $aws-region
+          echo $AWS_REGION
       
       - name: sam build
         run: |
@@ -71,10 +71,10 @@ jobs:
         if: ${{ success() }}
         run: |
           cd sample-apps/python-lambda-sam2
-          ./run.sh -d -r $aws-region
+          ./run.sh -d -r $AWS_REGION
           
       - name: invoke Lambda
         if: ${{ success() }}
         run: |
           cd sample-apps/python-lambda-sam2
-          ./run.sh -i -r $aws-region
+          ./run.sh -i -r $AWS_REGION
