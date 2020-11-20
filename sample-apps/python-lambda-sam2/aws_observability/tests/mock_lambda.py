@@ -1,2 +1,2 @@
 def handler(event, context):
-    return '200 ok'
+    return "200 ok"

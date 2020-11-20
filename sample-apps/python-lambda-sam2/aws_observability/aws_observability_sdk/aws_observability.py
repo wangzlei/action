@@ -35,22 +35,29 @@ trace.set_tracer_provider(
 console_exporter = os.environ.get("CONSOLE_EXPORTER", None)
 if not console_exporter is None:
     from opentelemetry.sdk.trace.export import ConsoleSpanExporter
-    trace.get_tracer_provider().add_span_processor(SimpleExportSpanProcessor(ConsoleSpanExporter()))
-    logger.info('Console exporter initialized.')
+
+    trace.get_tracer_provider().add_span_processor(
+        SimpleExportSpanProcessor(ConsoleSpanExporter())
+    )
+    logger.info("Console exporter initialized.")
 
 ci = os.environ.get("CI", None)
 if ci is None:
     from opentelemetry.exporter.otlp.trace_exporter import OTLPSpanExporter
+
     otlp_exporter = OTLPSpanExporter(endpoint="localhost:55680", insecure=True)
     span_processor = BatchExportSpanProcessor(otlp_exporter)
     trace.get_tracer_provider().add_span_processor(span_processor)
-    logger.info('Otlp exporter initialized.')
+    logger.info("Otlp exporter initialized.")
 else:
-    from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+    from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
+        InMemorySpanExporter,
+    )
+
     in_memory_exporter = InMemorySpanExporter()
     span_processor = SimpleExportSpanProcessor(in_memory_exporter)
     trace.get_tracer_provider().add_span_processor(span_processor)
-    logger.info('In memory exporter initialized.')
+    logger.info("In memory exporter initialized.")
 
 
 AwsLambdaInstrumentor().instrument()
