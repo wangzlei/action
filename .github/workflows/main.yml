@@ -66,7 +66,6 @@ jobs:
         run: |
           echo $AWS_REGION
           aws s3 ls
-          aws configure get region
           cd sample-apps/python-lambda-sam2
           chmod +x run.sh
           ./run.sh -b
