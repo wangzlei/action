@@ -12,6 +12,26 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  unit:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python: [2.7, 3.7, 3.8]
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install Tox and any other packages
+        run: pip install tox
+      - name: Run Tox
+        run: |
+          echo tox...
+          cd sample-apps/python-lambda-sam2
+          tox
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
