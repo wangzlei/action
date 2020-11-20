@@ -14,6 +14,7 @@ echo_usage () {
 }
 
 main () {
+    echo "running..."
     saved_args="$@"
     # region=$(aws configure get region)
     region='us-west-2'
