@@ -16,8 +16,7 @@ echo_usage () {
 main () {
     echo "running..."
     saved_args="$@"
-    region=$(aws configure get region)
-    # region='us-west-2'
+    region='us-west-2'
     stack='aot-py38-sample-layer'
     template='template.yml'
     build=false
@@ -88,7 +87,7 @@ main () {
     fi
 
     if [[ $invoke == true ]]; then
-        APIID=$(aws cloudformation describe-stack-resource --stack-name $stack --logical-resource-id api --query 'StackResourceDetail.PhysicalResourceId' --output text)
+        APIID=$(aws cloudformation describe-stack-resource --stack-name $stack --region $region --logical-resource-id api --query 'StackResourceDetail.PhysicalResourceId' --output text)
         curl https://$APIID.execute-api.$region.amazonaws.com/api/ -v
     fi
 }
