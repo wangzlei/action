@@ -39,8 +39,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-#       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{matrix.region}}
     
     strategy:
@@ -58,16 +56,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{matrix.region}}
-
-      - name: init
-        run: |
-          echo $AWS_REGION init
-          aws s3 ls
-          aws configure get region
           
       - name: sam build
         run: |
-          echo $AWS_REGION
+          echo $aws-region
           cd sample-apps/python-lambda-sam2
           chmod +x run.sh
           ./run.sh -b
@@ -76,10 +68,10 @@ jobs:
         if: ${{ success() }}
         run: |
           cd sample-apps/python-lambda-sam2
-          ./run.sh -d
+          ./run.sh -d -r -r $aws-region
           
       - name: invoke Lambda
         if: ${{ success() }}
         run: |
           cd sample-apps/python-lambda-sam2
-          ./run.sh -i
+          ./run.sh -i -r $aws-region
