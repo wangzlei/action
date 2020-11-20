@@ -57,9 +57,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{matrix.region}}
           
-      - name: sam build
+      - name: init
         run: |
           echo $aws-region
+      
+      - name: sam build
+        run: |
           cd sample-apps/python-lambda-sam2
           chmod +x run.sh
           ./run.sh -b
@@ -68,7 +71,7 @@ jobs:
         if: ${{ success() }}
         run: |
           cd sample-apps/python-lambda-sam2
-          ./run.sh -d -r -r $aws-region
+          ./run.sh -d -r $aws-region
           
       - name: invoke Lambda
         if: ${{ success() }}
