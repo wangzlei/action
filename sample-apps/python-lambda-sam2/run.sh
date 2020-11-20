@@ -15,7 +15,8 @@ echo_usage () {
 
 main () {
     saved_args="$@"
-    region=$(aws configure get region)
+    # region=$(aws configure get region)
+    region='us-west-2'
     stack='aot-py38-sample-layer'
     template='template.yml'
     build=false
