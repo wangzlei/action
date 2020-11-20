@@ -38,10 +38,10 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-#     env:
+    env:
 #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#       AWS_REGION: ${{matrix.region}}
+      AWS_REGION: ${{matrix.region}}
     
     strategy:
       matrix:
@@ -59,6 +59,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{matrix.region}}
 
+      - name: init
+        run: |
+          echo $AWS_REGION init
+          aws s3 ls
+          aws configure get region
+          
       - name: sam build
         run: |
           echo $AWS_REGION
