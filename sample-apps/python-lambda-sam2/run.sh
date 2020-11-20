@@ -9,19 +9,21 @@ echo_usage () {
     echo " -t <cloudformation template>"
     echo " -b <sam build>"
     echo " -d <sam deploy>"
+    echo " -i <invoke lambda>"
     echo " -s <stack name>"
 }
 
 main () {
     saved_args="$@"
-    region='us-west-2'
+    region=$(aws configure get region)
     stack='aot-py38-sample-layer'
     template='template.yml'
     build=false
     deploy=false
     debug=false
+    invoke=false
 
-    while getopts "hbdxr:t:s:" opt; do
+    while getopts "hbdxir:t:s:" opt; do
         case "${opt}" in
             h) echo_usage
                 exit 0
@@ -31,6 +33,8 @@ main () {
             x) debug=true
                 ;;
             d) deploy=true
+                ;;
+            i) invoke=true
                 ;;
             r) region="${OPTARG}"
                 ;;
@@ -49,9 +53,10 @@ main () {
 
     echo "Invoked with: ${saved_args}"
 
-    if [[ $build == false && $deploy == false ]]; then
+    if [[ $build == false && $deploy == false && $invoke == false ]]; then
         build=true
         deploy=true
+        invoke=true
     fi
 
     if [[ $build == true ]]; then
@@ -77,9 +82,13 @@ main () {
     if [[ $deploy == true ]]; then
         echo "sam deploying..."
         sam deploy --stack-name $stack --capabilities CAPABILITY_NAMED_IAM --resolve-s3 --region $region
+        rm -rf aws_observability/aws_observability_collector
     fi
 
-    rm -rf aws_observability/aws_observability_collector
+    if [[ $invoke == true ]]; then
+        APIID=$(aws cloudformation describe-stack-resource --stack-name $stack --logical-resource-id api --query 'StackResourceDetail.PhysicalResourceId' --output text)
+        curl https://$APIID.execute-api.$region.amazonaws.com/api/ -v
+    fi
 }
 
 main "$@"

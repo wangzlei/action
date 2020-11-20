@@ -32,8 +32,10 @@ for k, v in awsLambdaEnvDict.items():
 os.environ["ORIG_HANDLER"] = "mock_lambda.handler"
 sys.path.append("aws_observability/aws_observability_sdk")
 
-from aws_observability import lambda_handler, in_memory_exporter
+from aws_observability import lambda_handler
+from opentelemetry import trace
 from opentelemetry.trace import SpanKind
+from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
 
 
 class MockLambdaContext:
@@ -43,6 +45,15 @@ class MockLambdaContext:
 lambdaContext = MockLambdaContext()
 lambdaContext.invoked_function_arn = "arn://mock-lambda-function-arn"
 lambdaContext.aws_request_id = "mock_aws_request_id"
+
+
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
+    InMemorySpanExporter,
+)
+
+in_memory_exporter = InMemorySpanExporter()
+span_processor = SimpleExportSpanProcessor(in_memory_exporter)
+trace.get_tracer_provider().add_span_processor(span_processor)
 
 
 def test_lambda_instrument(capsys):

@@ -49,15 +49,6 @@ if ci is None:
     span_processor = BatchExportSpanProcessor(otlp_exporter)
     trace.get_tracer_provider().add_span_processor(span_processor)
     logger.info("Otlp exporter initialized.")
-else:
-    from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
-        InMemorySpanExporter,
-    )
-
-    in_memory_exporter = InMemorySpanExporter()
-    span_processor = SimpleExportSpanProcessor(in_memory_exporter)
-    trace.get_tracer_provider().add_span_processor(span_processor)
-    logger.info("In memory exporter initialized.")
 
 
 AwsLambdaInstrumentor().instrument()
