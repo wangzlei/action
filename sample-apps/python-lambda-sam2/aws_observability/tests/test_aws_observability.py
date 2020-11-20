@@ -70,4 +70,4 @@ def test_lambda_instrument(capsys):
     assert resource_atts["telemetry.sdk.name"] == "opentelemetry"
 
     attributs = span.attributes
-    assert attributs["faas.execution"] == "mock_aws_request_id1"
+    assert attributs["faas.execution"] == "mock_aws_request_id"
