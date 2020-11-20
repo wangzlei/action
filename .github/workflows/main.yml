@@ -65,10 +65,8 @@ jobs:
       - name: sam build
         run: |
           echo $AWS_REGION
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
           aws s3 ls
+          aws configure get region
           brew tap aws/tap
           brew install aws-sam-cli
           cd sample-apps/python-lambda-sam2
@@ -79,4 +77,4 @@ jobs:
         if: ${{ success() }}
         run: |
           cd sample-apps/python-lambda-sam2
-          ./run.sh -d -r us-west-1
+          ./run.sh -d -r $AWS_REGION
