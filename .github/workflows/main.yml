@@ -46,12 +46,12 @@ jobs:
           echo $AWS_REGION
           brew tap aws/tap
           brew install aws-sam-cli
-          cd sample-apps/Python-lambda-sam
+          cd sample-apps/python-lambda-sam2
           chmod +x run.sh
           ./run.sh -b
       
       - name: sam deploy us-west-1
         if: ${{ success() }}
         run: |
-          cd sample-apps/Python-lambda-sam
+          cd sample-apps/python-lambda-sam2
           ./run.sh -d -r us-west-1
