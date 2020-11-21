@@ -36,7 +36,10 @@ from aws_observability import lambda_handler
 from opentelemetry import trace
 from opentelemetry.trace import SpanKind
 from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
-
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
+    InMemorySpanExporter,
+)
+from opentelemetry.instrumentation.aws_lambda import AwsLambdaInstrumentor
 
 class MockLambdaContext:
     pass
@@ -46,17 +49,12 @@ lambdaContext = MockLambdaContext()
 lambdaContext.invoked_function_arn = "arn://mock-lambda-function-arn"
 lambdaContext.aws_request_id = "mock_aws_request_id"
 
-
-from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
-    InMemorySpanExporter,
-)
-
 in_memory_exporter = InMemorySpanExporter()
 span_processor = SimpleExportSpanProcessor(in_memory_exporter)
 trace.get_tracer_provider().add_span_processor(span_processor)
 
-
-def test_lambda_instrument(capsys):
+def test_lambda_instrument():
+    in_memory_exporter.clear()
     lambda_handler("mock", lambdaContext)
     spans = in_memory_exporter.get_finished_spans()
     assert len(spans) == 1

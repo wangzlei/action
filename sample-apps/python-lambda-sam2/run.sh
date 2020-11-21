@@ -10,21 +10,27 @@ echo_usage () {
     echo " -b <sam build>"
     echo " -d <sam deploy>"
     echo " -i <invoke lambda>"
+    echo " -l <show layer arn>"
     echo " -s <stack name>"
 }
 
 main () {
     echo "running..."
     saved_args="$@"
-    region='us-west-2'
     stack='aot-py38-sample-layer'
     template='template.yml'
     build=false
     deploy=false
     debug=false
     invoke=false
+    layer=false
+    if [[ $AWS_REGION ]]; then
+        region=$AWS_REGION
+    else
+        region=$(aws configure get region)
+    fi
 
-    while getopts "hbdxir:t:s:" opt; do
+    while getopts "hbdxilr:t:s:" opt; do
         case "${opt}" in
             h) echo_usage
                 exit 0
@@ -36,6 +42,8 @@ main () {
             d) deploy=true
                 ;;
             i) invoke=true
+                ;;
+            l) layer=true
                 ;;
             r) region="${OPTARG}"
                 ;;
@@ -54,10 +62,11 @@ main () {
 
     echo "Invoked with: ${saved_args}"
 
-    if [[ $build == false && $deploy == false && $invoke == false ]]; then
+    if [[ $build == false && $deploy == false && $invoke == false && $layer == false ]]; then
         build=true
         deploy=true
         invoke=true
+        layer=true
     fi
 
     if [[ $build == true ]]; then
@@ -87,8 +96,15 @@ main () {
     fi
 
     if [[ $invoke == true ]]; then
-        APIID=$(aws cloudformation describe-stack-resource --stack-name $stack --region $region --logical-resource-id api --query 'StackResourceDetail.PhysicalResourceId' --output text)
-        curl https://$APIID.execute-api.$region.amazonaws.com/api/ -v
+        apiid=$(aws cloudformation describe-stack-resource --stack-name $stack --region $region --logical-resource-id api --query 'StackResourceDetail.PhysicalResourceId' --output text)
+        curl https://$apiid.execute-api.$region.amazonaws.com/api/ -v
+    fi
+
+    if [[ $layer == true ]]; then
+        function=$(aws cloudformation describe-stack-resource --stack-name $stack --region $region --logical-resource-id function --query 'StackResourceDetail.PhysicalResourceId' --output text)
+        layer=$(aws lambda get-function --function-name $function --query 'Configuration.Layers[0].Arn' --output text)
+        echo "AOT Python3.8 Lambda layer ARN:"
+        echo $layer
     fi
 }
 
