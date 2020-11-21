@@ -78,3 +78,9 @@ jobs:
         run: |
           cd sample-apps/python-lambda-sam2
           ./run.sh -i -r $AWS_REGION
+          
+      - name: layer arn
+        if: ${{ success() }}
+        run: |
+          cd sample-apps/python-lambda-sam2
+          ./run.sh -l -r $AWS_REGION
