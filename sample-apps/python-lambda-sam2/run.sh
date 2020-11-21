@@ -103,7 +103,7 @@ main () {
     if [[ $layer == true ]]; then
         function=$(aws cloudformation describe-stack-resource --stack-name $stack --region $region --logical-resource-id function --query 'StackResourceDetail.PhysicalResourceId' --output text)
         layer=$(aws lambda get-function --function-name $function --query 'Configuration.Layers[0].Arn' --output text)
-        echo "AOT Python3.8 Lambda layer ARN:"
+        echo -e "\nAOT Python3.8 Lambda layer ARN:"
         echo $layer
     fi
 }
