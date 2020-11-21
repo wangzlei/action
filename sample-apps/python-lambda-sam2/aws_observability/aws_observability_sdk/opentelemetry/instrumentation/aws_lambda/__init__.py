@@ -97,7 +97,7 @@ class AwsLambdaInstrumentor(BaseInstrumentor):
         )
 
         with self._tracer.start_as_current_span(
-            orig_handler, context=parent_context, kind=SpanKind.CLIENT
+            orig_handler, context=parent_context, kind=SpanKind.CONSUMER
         ) as span:
             # Refer: https://github.com/open-telemetry/opentelemetry-specification/blob/master/specification/trace/semantic_conventions/faas.md#example
             span.set_attribute("faas.execution", ctx_aws_request_id)
