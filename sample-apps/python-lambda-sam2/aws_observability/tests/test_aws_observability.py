@@ -71,7 +71,7 @@ def test_lambda_instrument(capsys):
 
     assert span.context.trace_id == 0x5FB7331105E8BB83207FA31D4D9CDB4C
 
-    assert span.kind == SpanKind.CLIENT
+    assert span.kind == SpanKind.CONSUMER
 
     resource_atts = span.resource.attributes
     assert resource_atts["faas.name"] == "mock_lambda.handler"
