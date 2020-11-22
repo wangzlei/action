@@ -1,4 +1,4 @@
-# awslambda-otel-sample
+# Please ingnore this read me since it is out of data.
 
 ## Lambda OpenTelemetry java auto-instrumentation Sample
 under `sample-apps/java-lambda` 
